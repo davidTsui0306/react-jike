@@ -8,12 +8,24 @@ const Login = () => {
       <Card className="login-container">
         <img className="login-logo" src={logo} alt="" />
         {/* 登錄表單 */}
-        <Form>
-          <Form.Item>
-            <Input size="large" placeholder="請輸入手機號" />
+        <Form validateTrigger="onBlur">
+          <Form.Item name="mobile"
+            rules={[
+                { 
+                    required: true, 
+                    message: 'Your phone number is wrong' 
+                },
+                { 
+                    pattern: /^09\d{8}$/,
+                    message: 'Your phone number is wrong' 
+                }
+            ]}>
+            <Input size="large" placeholder="Please input your phone number!" />
           </Form.Item>
-          <Form.Item>
-            <Input size="large" placeholder="請輸入驗證碼" />
+          <Form.Item name="code"
+            rules={[{ required: true, message: 'Your code is wrong' }]}
+            >
+            <Input size="large" placeholder="Please input your code!" />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" size="large" block>

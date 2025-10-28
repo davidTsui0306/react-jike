@@ -12,11 +12,20 @@ export function getChannelAPI(){
 }
 
 // 提交文章表單
-
 export function createArticleAPI(data){
     return request({
         url: '/mp/articles?draft=false',
         method: 'POST',
         data
+    })
+}
+
+// 獲取文章列表
+
+export function getArticleListAPI(params){
+    return request({
+        url: '/mp/articles',
+        method: 'GET',
+        params
     })
 }

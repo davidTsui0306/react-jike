@@ -5,12 +5,19 @@ import { Table, Tag, Space } from 'antd'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import img404 from '@/assets/error.png'
 import { useChannel } from '@/hooks/useChannel'
+import { useEffect, useState } from 'react'
+import { getArticleListAPI } from '@/apis/article'
 
 const { Option } = Select
 const { RangePicker } = DatePicker
 
 const Article = () => {
         const { channelList } = useChannel()
+
+        const status = {
+            1: <Tag color="warning">待審核</Tag>,
+            2: <Tag color="success">審核通過</Tag>
+        }
         const columns = [
         {
             title: '封面',
@@ -28,7 +35,9 @@ const Article = () => {
         {
             title: '狀態',
             dataIndex: 'status',
-            render: data => <Tag color="green">审核通过</Tag>
+            // data => 後端返回的狀態 根據他做條件渲染
+            // data = 1 => 待審核  / = 2 => 審核通過
+            render: data => status[data]
         },
         {
             title: '發布時間',
@@ -78,6 +87,18 @@ const Article = () => {
             title: 'wkwebview離線化加载h5資源解决方案'
         }
     ]
+
+    // 獲取文章列表
+    const [list, setList] = useState([])
+    const [count, setCount] = useState(0)
+    useEffect(() => {
+        async function getList() {
+            const res = await getArticleListAPI()
+            setList(res.data.results)
+            setCount(res.data.total_count)
+        }
+        getList()
+    }, [])
     return (
         <div>
         <Card
@@ -115,15 +136,15 @@ const Article = () => {
 
             <Form.Item>
                 <Button type="primary" htmlType="submit" style={{ marginLeft: 40 }}>
-                篩選
+                    篩選
                 </Button>
             </Form.Item>
             </Form>
         </Card>
 
         {/*表格區域 */}
-        <Card title={`根據篩選條件共查詢到 count 條结果：`}>
-            <Table rowKey="id" columns={columns} dataSource={data} />
+        <Card title={`根據篩選條件共查詢到 ${count} 條结果：`}>
+            <Table rowKey="id" columns={columns} dataSource={list} />
         </Card>
         </div>
     )

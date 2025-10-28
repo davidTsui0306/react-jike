@@ -6,7 +6,6 @@ import { AuthRoute } from '@/components/AuthRoute'
 import Home from "@/pages/Home";
 import Article from "@/pages/Article";
 import Publish from "@/pages/Publish";
-import { Navigate } from "react-router-dom";
 
 const router = createBrowserRouter([
     {
@@ -14,11 +13,7 @@ const router = createBrowserRouter([
         element:<AuthRoute><Layout /></AuthRoute>,
         children:[
             {
-                index: true,          
-                element: <Navigate to="home" />
-            },
-            {
-                path:'home',
+                index:true,
                 element:<Home />
             },
             {

@@ -52,6 +52,12 @@ const Publish = () => {
         createArticleAPI(reqData)
     }
 
+    // 上傳回調
+    const [imageList, setImageList] = useState([])
+    const onChange = (value) => {
+        setImageList(value.fileList)
+    }
+
     return (
         <div className="publish">
         <Card
@@ -85,6 +91,26 @@ const Publish = () => {
                     {/*value屬性用戶選重後會自動收集作為接口提交字段*/}
                     {channelList.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                 </Select>
+            </Form.Item>
+            <Form.Item label="封面">
+            <Form.Item name="type">
+                <Radio.Group>
+                    <Radio value={1}>单图</Radio>
+                    <Radio value={3}>三图</Radio>
+                    <Radio value={0}>无图</Radio>
+                </Radio.Group>
+            </Form.Item>
+            <Upload
+                listType="picture-card" // 決定選擇文件框外觀樣式
+                showUploadList          // 控制顯示上傳列表
+                action={'http://geek.itheima.net/v1_0/upload'}
+                name='image'
+                onChange={onChange}
+            >
+                <div style={{ marginTop: 8 }}>
+                    <PlusOutlined />
+                </div>
+            </Upload>
             </Form.Item>
             <Form.Item
                 label="内容"

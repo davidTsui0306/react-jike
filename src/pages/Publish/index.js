@@ -7,7 +7,8 @@ import {
   Input,
   Upload,
   Space,
-  Select
+  Select,
+  message
 } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
@@ -37,14 +38,17 @@ const Publish = () => {
 
     // 提交表單
     const onFinish = (formValue) => {
+        // 檢驗imagetype使否和實際圖片列表imagelist相等
+        if(imageList.length !== imageType) return message.warning('封面類型和圖片數量不匹配')
+            
         const {title, content, channel_id} = formValue
         // 按照接口文黨格是處理表單數據
         const reqData = {
             title,
             content,
             cover:{
-                type: 0,
-                images: []
+                type: imageType,
+                images: imageList.map(item => item.response.data.url)
             },
             channel_id
         }
@@ -101,9 +105,9 @@ const Publish = () => {
             <Form.Item label="封面">
             <Form.Item name="type">
                 <Radio.Group onChange={onTypeChange}>
-                    <Radio value={1}>单图</Radio>
-                    <Radio value={3}>三图</Radio>
-                    <Radio value={0}>无图</Radio>
+                    <Radio value={1}>單圖</Radio>
+                    <Radio value={3}>三圖</Radio>
+                    <Radio value={0}>無圖</Radio>
                 </Radio.Group>
             </Form.Item>
             {imageType > 0 &&  <Upload
@@ -112,6 +116,7 @@ const Publish = () => {
                 action={'http://geek.itheima.net/v1_0/upload'}
                 name='image'
                 onChange={onChange}
+                maxCount={imageType}
             >
                 <div style={{ marginTop: 8 }}>
                     <PlusOutlined />

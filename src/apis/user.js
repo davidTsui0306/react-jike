@@ -12,7 +12,6 @@ export function loginAPI(formData){
 }
 
 // 獲取用戶信息
-
 export function getProfileAPI(){
     return request({
         url: '/user/profile',

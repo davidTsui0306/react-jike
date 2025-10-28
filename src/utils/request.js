@@ -1,6 +1,7 @@
 // axois封裝
 import axios from "axios";
-import { getToken } from "./token";
+import { getToken, removeToken } from "./token";
+import router from "@/router";
 
 // 1.根域名配置
 // 2.超時時間
@@ -30,7 +31,13 @@ request.interceptors.response.use((response)=> {
 
     return response.data
   }, (error)=> {
-
+    // 監控401 token失效
+    console.dir(error)
+    if(error.response.status === 401){
+      removeToken()
+      router.navigate('/login')
+      window.location.reload()
+    }
     return Promise.reject(error)
 })
 

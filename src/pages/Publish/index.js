@@ -12,6 +12,8 @@ import {
 import { PlusOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 import './index.scss'
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
 
 const { Option } = Select
 
@@ -22,7 +24,7 @@ const Publish = () => {
         title={
           <Breadcrumb items={[
             { title: <Link to={'/'}>首页</Link> },
-            { title: '发布文章' },
+            { title: '發布文章' },
           ]}
           />
         }
@@ -33,31 +35,37 @@ const Publish = () => {
           initialValues={{ type: 1 }}
         >
           <Form.Item
-            label="标题"
+            label="標題"
             name="title"
-            rules={[{ required: true, message: '请输入文章标题' }]}
+            rules={[{ required: true, message: '請输入文章標題' }]}
           >
-            <Input placeholder="请输入文章标题" style={{ width: 400 }} />
+            <Input placeholder="請输入文章標題" style={{ width: 400 }} />
           </Form.Item>
           <Form.Item
-            label="频道"
+            label="頻道"
             name="channel_id"
-            rules={[{ required: true, message: '请选择文章频道' }]}
+            rules={[{ required: true, message: '請選擇文章频道' }]}
           >
-            <Select placeholder="请选择文章频道" style={{ width: 400 }}>
+            <Select placeholder="请選擇文章频道" style={{ width: 400 }}>
               <Option value={0}>推荐</Option>
             </Select>
           </Form.Item>
           <Form.Item
             label="内容"
             name="content"
-            rules={[{ required: true, message: '请输入文章内容' }]}
-          ></Form.Item>
+            rules={[{ required: true, message: '請輸入文章内容' }]}
+          >
+            <ReactQuill
+            className="publish-quill"
+            theme="snow"
+            placeholder="請輸入文章内容"
+            />
+          </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 4 }}>
             <Space>
               <Button size="large" type="primary" htmlType="submit">
-                发布文章
+                發布文章
               </Button>
             </Space>
           </Form.Item>

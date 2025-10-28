@@ -16,6 +16,8 @@ import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { getChannelAPI } from '@/apis/article'
 import { useEffect, useState } from 'react'
+import { createArticleAPI } from '@/apis/article'
+import { create } from 'lodash'
 
 const { Option } = Select
 
@@ -32,6 +34,24 @@ const Publish = () => {
         // 調用函數
         getChannelList()
     }, [])
+
+    // 提交表單
+    const onFinish = (formValue) => {
+        const {title, content, channel_id} = formValue
+        // 按照接口文黨格是處理表單數據
+        const reqData = {
+            title,
+            content,
+            cover:{
+                type: 0,
+                images: []
+            },
+            channel_id
+        }
+        // 調用接口提交
+        createArticleAPI(reqData)
+    }
+
     return (
         <div className="publish">
         <Card
@@ -44,9 +64,10 @@ const Publish = () => {
             }
         >
             <Form
-            labelCol={{ span: 4 }}
-            wrapperCol={{ span: 16 }}
-            initialValues={{ type: 1 }}
+                labelCol={{ span: 4 }}
+                wrapperCol={{ span: 16 }}
+                initialValues={{ type: 1 }}
+                onFinish={onFinish}
             >
             <Form.Item
                 label="標題"

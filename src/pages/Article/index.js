@@ -88,17 +88,43 @@ const Article = () => {
         }
     ]
 
+    // 篩選功能
+    const [reqData, setReqData] = useState({
+        status: '',
+        channel_id: '',
+        begin_pubdate: '',
+        end_pubdate: '',
+        page: 1,
+        per_page: 4
+    })
+
+
     // 獲取文章列表
     const [list, setList] = useState([])
     const [count, setCount] = useState(0)
     useEffect(() => {
         async function getList() {
-            const res = await getArticleListAPI()
+            const res = await getArticleListAPI(reqData)
             setList(res.data.results)
             setCount(res.data.total_count)
         }
         getList()
-    }, [])
+    }, [reqData])
+
+    
+    const onFinish = (formValue) => {
+        console.log(formValue)
+        setReqData({
+            ...reqData,
+            channel_id: formValue.channel_id,
+            statis: formValue.status,
+            begin_pubdate: formValue.date[0].format('YYYY-MM-DD'),
+            end_pubdate: formValue.date[1].format('YYYY-MM-DD')
+        })
+        // 重新拉文章列表，但因為上面useeffect reqdata變化了上面會再執行一次
+    }
+
+
     return (
         <div>
         <Card
@@ -106,39 +132,39 @@ const Article = () => {
             <Breadcrumb items={[
                 { title: <Link to={'/'}>首頁</Link> },
                 { title: '文章列表' },
-            ]} />
+                ]} />
             }
             style={{ marginBottom: 20 }}
         >
-            <Form initialValues={{ status: '' }}>
-            <Form.Item label="狀態" name="status">
-                <Radio.Group>
-                <Radio value={''}>全部</Radio>
-                <Radio value={0}>草稿</Radio>
-                <Radio value={2}>審核通過</Radio>
-                </Radio.Group>
-            </Form.Item>
+            <Form initialValues={{ status: '' }} onFinish={onFinish}>
+                <Form.Item label="狀態" name="status">
+                    <Radio.Group>
+                    <Radio value={''}>全部</Radio>
+                    <Radio value={0}>草稿</Radio>
+                    <Radio value={2}>審核通過</Radio>
+                    </Radio.Group>
+                </Form.Item>
 
-            <Form.Item label="频道" name="channel_id">
-                <Select
-                placeholder="請選擇文章频道"
-                defaultValue="lucy"
-                style={{ width: 120 }}
-                >
-                    {channelList.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
-                </Select>
-            </Form.Item>
+                <Form.Item label="频道" name="channel_id">
+                    <Select
+                    placeholder="請選擇文章频道"
+                    defaultValue="lucy"
+                    style={{ width: 120 }}
+                    >
+                        {channelList.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                    </Select>
+                </Form.Item>
 
-            <Form.Item label="日期" name="date">
-                {/* 傳入locale属性 控制中文顯示*/}
-                <RangePicker locale={locale}></RangePicker>
-            </Form.Item>
+                <Form.Item label="日期" name="date">
+                    {/* 傳入locale属性 控制中文顯示*/}
+                    <RangePicker locale={locale}></RangePicker>
+                </Form.Item>
 
-            <Form.Item>
-                <Button type="primary" htmlType="submit" style={{ marginLeft: 40 }}>
-                    篩選
-                </Button>
-            </Form.Item>
+                <Form.Item>
+                    <Button type="primary" htmlType="submit" style={{ marginLeft: 40 }}>
+                        篩選
+                    </Button>
+                </Form.Item>
             </Form>
         </Card>
 

@@ -124,6 +124,16 @@ const Article = () => {
         // 重新拉文章列表，但因為上面useeffect reqdata變化了上面會再執行一次
     }
 
+    // 分頁
+    const onPageChange = (page) => {
+        console.log(page)
+        
+        setReqData({
+            ...reqData,
+            page
+        })
+        // 跟上面一樣因為 reqdata變了會再一次執行useeffect
+    }
 
     return (
         <div>
@@ -170,7 +180,11 @@ const Article = () => {
 
         {/*表格區域 */}
         <Card title={`根據篩選條件共查詢到 ${count} 條结果：`}>
-            <Table rowKey="id" columns={columns} dataSource={list} />
+            <Table rowKey="id" columns={columns} dataSource={list} pagination={{
+                total: count,
+                pageSize: reqData.per_page,
+                onChange: onPageChange
+            }}/>
         </Card>
         </div>
     )
